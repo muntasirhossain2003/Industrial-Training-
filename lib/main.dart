@@ -17,8 +17,8 @@ class StudentData {
   String program;
   String department;
   String location;
-  String? imagePath; // For mobile: file path
-  Uint8List? imageBytes; // For web: image bytes
+  String? imagePath;
+  Uint8List? imageBytes;
 
   StudentData({
     required this.name,
@@ -26,8 +26,8 @@ class StudentData {
     required this.program,
     required this.department,
     required this.location,
-    this.imagePath, // Optional image path
-    this.imageBytes, // Optional image bytes
+    this.imagePath,
+    this.imageBytes,
   });
 }
 
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
     program: 'BSc in CSE',
     department: 'CSE',
     location: 'Bangladesh',
-    imagePath: null, // No custom image by default
+    imagePath: null,
     imageBytes: null,
   );
 
@@ -115,10 +115,9 @@ class _FormPageState extends State<FormPage> {
   late TextEditingController departmentController;
   late TextEditingController locationController;
 
-  // Image picker instance and selected image path
   final ImagePicker _imagePicker = ImagePicker();
   String? _selectedImagePath;
-  Uint8List? _selectedImageBytes; // For web platform
+  Uint8List? _selectedImageBytes;
 
   @override
   void initState() {
@@ -132,12 +131,10 @@ class _FormPageState extends State<FormPage> {
     locationController = TextEditingController(
       text: widget.currentData.location,
     );
-    // Initialize with existing image path/bytes if available
     _selectedImagePath = widget.currentData.imagePath;
     _selectedImageBytes = widget.currentData.imageBytes;
   }
 
-  // Function to pick image from gallery
   Future<void> _pickImageFromGallery() async {
     try {
       final XFile? image = await _imagePicker.pickImage(
@@ -149,14 +146,12 @@ class _FormPageState extends State<FormPage> {
 
       if (image != null) {
         if (kIsWeb) {
-          // For web: read image as bytes
           final bytes = await image.readAsBytes();
           setState(() {
             _selectedImageBytes = bytes;
             _selectedImagePath = null;
           });
         } else {
-          // For mobile: use file path
           setState(() {
             _selectedImagePath = image.path;
             _selectedImageBytes = null;
@@ -170,7 +165,6 @@ class _FormPageState extends State<FormPage> {
     }
   }
 
-  // Function to pick image from camera
   Future<void> _pickImageFromCamera() async {
     try {
       final XFile? image = await _imagePicker.pickImage(
@@ -182,14 +176,12 @@ class _FormPageState extends State<FormPage> {
 
       if (image != null) {
         if (kIsWeb) {
-          // For web: read image as bytes
           final bytes = await image.readAsBytes();
           setState(() {
             _selectedImageBytes = bytes;
             _selectedImagePath = null;
           });
         } else {
-          // For mobile: use file path
           setState(() {
             _selectedImagePath = image.path;
             _selectedImageBytes = null;
@@ -203,7 +195,6 @@ class _FormPageState extends State<FormPage> {
     }
   }
 
-  // Function to show image source selection dialog
   void _showImageSourceDialog() {
     showDialog(
       context: context,
@@ -236,7 +227,6 @@ class _FormPageState extends State<FormPage> {
     );
   }
 
-  // Function to remove selected image
   void _removeImage() {
     setState(() {
       _selectedImagePath = null;
@@ -254,22 +244,18 @@ class _FormPageState extends State<FormPage> {
     super.dispose();
   }
 
-  // Helper method to build image preview
   Widget _buildImagePreview() {
     if (kIsWeb && _selectedImageBytes != null) {
-      // Web: display from bytes
       return ClipRRect(
         borderRadius: BorderRadius.circular(7),
         child: Image.memory(_selectedImageBytes!, fit: BoxFit.cover),
       );
     } else if (!kIsWeb && _selectedImagePath != null) {
-      // Mobile: display from file
       return ClipRRect(
         borderRadius: BorderRadius.circular(7),
         child: Image.file(File(_selectedImagePath!), fit: BoxFit.cover),
       );
     } else {
-      // No image selected
       return Icon(Icons.person, size: 80, color: Colors.grey[400]);
     }
   }
@@ -302,7 +288,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 30),
 
-                // Image Picker Section
                 Center(
                   child: Column(
                     children: [
@@ -365,7 +350,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 30),
 
-                // Name Field
                 TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
@@ -386,7 +370,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 20),
 
-                // ID Field
                 TextFormField(
                   controller: idController,
                   decoration: InputDecoration(
@@ -407,7 +390,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Program Field
                 TextFormField(
                   controller: programController,
                   decoration: InputDecoration(
@@ -428,7 +410,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Department Field
                 TextFormField(
                   controller: departmentController,
                   decoration: InputDecoration(
@@ -449,7 +430,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Location Field
                 TextFormField(
                   controller: locationController,
                   decoration: InputDecoration(
@@ -470,7 +450,6 @@ class _FormPageState extends State<FormPage> {
                 ),
                 SizedBox(height: 40),
 
-                // Buttons Row
                 Row(
                   children: [
                     Expanded(
@@ -504,10 +483,8 @@ class _FormPageState extends State<FormPage> {
                               program: programController.text,
                               department: departmentController.text,
                               location: locationController.text,
-                              imagePath:
-                                  _selectedImagePath, // Include image path for mobile
-                              imageBytes:
-                                  _selectedImageBytes, // Include image bytes for web
+                              imagePath: _selectedImagePath,
+                              imageBytes: _selectedImageBytes,
                             );
                             widget.onSubmit(newData);
                           }
@@ -660,148 +637,218 @@ class _IDCardPageState extends State<IDCardPage> {
             child: Card(
               elevation: 8,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Container(
                 width: 340,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Header
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
+                    // Combined Header and Photo Section - One continuous dark green area
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
                       ),
-                      decoration: BoxDecoration(
+                      child: Container(
                         color: cardHeaderFooterColor,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/images/iut-logo.jpeg',
-                            height: 65,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'ISLAMIC UNIVERSITY OF TECHNOLOGY',
-                            textAlign: TextAlign.center,
-                            style: getTextStyle(
-                              fontSize: 15,
-                              color: headerFooterTextColor,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
+                        child: Column(
+                          children: [
+                            // Logo and Title
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 15,
+                              ),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/iut-logo.jpeg',
+                                    height: 70,
+                                  ),
+                                  SizedBox(height: 12),
+                                  Text(
+                                    'ISLAMIC UNIVERSITY OF TECHNOLOGY',
+                                    textAlign: TextAlign.center,
+                                    style: getTextStyle(
+                                      fontSize: 13,
+                                      color: headerFooterTextColor,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 2.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            // Photo with transition to white
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 75,
+                                        color: cardHeaderFooterColor,
+                                      ),
+                                      Container(
+                                        height: 75,
+                                        color: cardContentColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 150,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: ClipRect(
+                                    child: Stack(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                color: cardHeaderFooterColor,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                color: cardContentColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        _buildProfileImage(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 75,
+                                        color: cardHeaderFooterColor,
+                                      ),
+                                      Container(
+                                        height: 75,
+                                        color: cardContentColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
-                    // Content
+                    // Content Section
                     Container(
-                      padding: EdgeInsets.fromLTRB(24, 24, 24, 20),
+                      padding: EdgeInsets.only(
+                        top: 15,
+                        left: 30,
+                        right: 30,
+                        bottom: 25,
+                      ),
                       color: cardContentColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: contentTextColor,
-                                  width: 3,
-                                ),
-                              ),
-                              // Display custom image if available, otherwise use default
-                              child: _buildProfileImage(),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-
+                          // Student ID Section
                           Row(
                             children: [
                               Icon(
                                 Icons.vpn_key,
-                                size: 18,
-                                color: contentTextColor,
+                                size: 20,
+                                color: contentTextColor.withOpacity(0.6),
                               ),
                               SizedBox(width: 8),
                               Text(
                                 'Student ID',
                                 style: getTextStyle(
-                                  fontSize: 14,
-                                  color: contentTextColor,
+                                  fontSize: 13,
+                                  color: contentTextColor.withOpacity(0.6),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 10),
                           Container(
+                            width: double.infinity,
                             padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
+                              horizontal: 20,
+                              vertical: 12,
                             ),
                             decoration: BoxDecoration(
                               color: cardHeaderFooterColor,
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  width: 10,
-                                  height: 10,
+                                  width: 12,
+                                  height: 12,
                                   decoration: BoxDecoration(
-                                    color: headerFooterTextColor,
+                                    color: Colors.cyan,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                SizedBox(width: 12),
+                                SizedBox(width: 15),
                                 Text(
                                   widget.studentData.id,
                                   style: getTextStyle(
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: headerFooterTextColor,
-                                    letterSpacing: 0.5,
+                                    letterSpacing: 1.0,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 20),
 
+                          // Student Name
                           _buildInfoRow(
                             Icons.person,
                             'Student Name',
                             widget.studentData.name,
                             contentTextColor,
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: 16),
+
+                          // Program
                           _buildInfoRow(
                             Icons.school,
                             'Program',
                             widget.studentData.program,
                             contentTextColor,
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: 16),
+
+                          // Department
                           _buildInfoRow(
                             Icons.business,
                             'Department',
                             widget.studentData.department,
                             contentTextColor,
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: 16),
+
+                          // Location
                           _buildInfoRow(
                             Icons.location_on,
                             '',
@@ -814,12 +861,12 @@ class _IDCardPageState extends State<IDCardPage> {
 
                     // Footer
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
                         color: cardHeaderFooterColor,
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
                         ),
                       ),
                       child: Center(
@@ -827,7 +874,7 @@ class _IDCardPageState extends State<IDCardPage> {
                           'A subsidiary organ of OIC',
                           style: getTextStyle(
                             fontSize: 12,
-                            color: headerFooterTextColor.withOpacity(0.7),
+                            color: headerFooterTextColor.withOpacity(0.8),
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -863,16 +910,12 @@ class _IDCardPageState extends State<IDCardPage> {
     );
   }
 
-  // Helper method to build profile image
   Widget _buildProfileImage() {
     if (kIsWeb && widget.studentData.imageBytes != null) {
-      // Web: display from bytes
       return Image.memory(widget.studentData.imageBytes!, fit: BoxFit.cover);
     } else if (!kIsWeb && widget.studentData.imagePath != null) {
-      // Mobile: display from file
       return Image.file(File(widget.studentData.imagePath!), fit: BoxFit.cover);
     } else {
-      // Default image
       return Image.asset('assets/images/profile image.jpg', fit: BoxFit.cover);
     }
   }
